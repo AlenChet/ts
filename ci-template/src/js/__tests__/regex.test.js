@@ -11,4 +11,8 @@ test('Username validation', () => {
     expect(validator.validateUsername('user----')).toBeFalsy();
     expect(validator.validateUsername('user_')).toBeFalsy();
     expect(validator.validateUsername('user1234')).toBeFalsy();
+    expect(validator.validateUsername('user1234r')).toBeFalsy();
+    expect(validator.validateUsername('-user')).toBeFalsy();
+    expect(validator.validateUsername('_user')).toBeFalsy();
+    expect(validator.validateUsername('useфr')).toBeFalsy();
 });
