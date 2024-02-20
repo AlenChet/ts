@@ -1,43 +1,18 @@
-import { Character, Team } from '../basic';
+import ErrorRepository from '../basic';
 
-describe('Team class', () => {
-    let team;
+test('ErrorRepository class', () => {
+    const errorRepository = new ErrorRepository();
 
-    beforeEach(() => {
-        team = new Team();
-    });
+    errorRepository.addError(404, 'Not Found');
+    errorRepository.addError(500, 'Internal Server Error');
 
-    test('Добавляем персонажа в команду', () => {
-        const character = new Character('Alena');
-        team.add(character);
-        expect(team.toArray()).toContain(character);
-    });
+    expect(errorRepository.translate(404)).toBe('Not Found');
+    expect(errorRepository.translate(500)).toBe('Internal Server Error');
+    expect(errorRepository.translate(200)).toBe('Unknown error');
 
-    test('Ошибка, если есть персонаж', () => {
-        const character = new Character('Alena');
-        team.add(character);
-        expect(() => team.add(character)).toThrow();
-    });
+    errorRepository.deleteError(404);
+    expect(errorRepository.translate(404)).toBe('Unknown error');
 
-    test('Добавляем несколько персонажей', () => {
-        const character1 = new Character('Alena');
-        const character2 = new Character('Artem');
-        team.addAll(character1, character2);
-        expect(team.toArray()).toContain(character1);
-        expect(team.toArray()).toContain(character2);
-    });
-
-    test('Не добавляются дубликаты', () => {
-        const character1 = new Character('Alena');
-        const character2 = new Character('Artem');
-        team.addAll(character1, character2, character1);
-        expect(team.toArray()).toHaveLength(2);
-    });
-
-    test('Конвертируем в массив', () => {
-        const character1 = new Character('Alena');
-        const character2 = new Character('Artem');
-        team.addAll(character1, character2);
-        expect(team.toArray()).toEqual([character1, character2]);
-    });
+    errorRepository.clearErrors();
+    expect(errorRepository.translate(500)).toBe('Unknown error');
 });

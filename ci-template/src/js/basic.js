@@ -1,33 +1,22 @@
-class Character {
-  constructor(name) {
-      this.name = name;
-  }
-}
-
-class Team {
+export default class ErrorRepository {
   constructor() {
-      this.members = new Set();
+      this.errors = new Map();
   }
 
-  add(player) {
-      if (this.members.has(player)) {
-          throw new Error(`Character ${player.name} is already in the team.`);
-      } else {
-          this.members.add(player);
-      }
+  translate(code) {
+      const errorDescription = this.errors.get(code);
+      return errorDescription ? errorDescription : 'Unknown error';
   }
 
-  addAll(...players) {
-      players.forEach(player => {
-          if (!this.members.has(player)) {
-              this.members.add(player);
-          }
-      });
+  addError(code, description) {
+      this.errors.set(code, description);
   }
 
-  toArray() {
-      return Array.from(this.members);
+  deleteError(code) {
+      this.errors.delete(code);
+  }
+
+  clearErrors() {
+      this.errors.clear();
   }
 }
-
-export { Character, Team };
