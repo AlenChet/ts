@@ -1,58 +1,18 @@
-import { Character, Magician, Daemon } from '../basic';
+import ArrayBufferConverter from '../basic';
 
-describe('Character class', () => {
-    test('should create a character with default values', () => {
-        const character = new Character();
-        expect(character.distance).toBe(0);
-        expect(character.stoned).toBe(false);
-    });
+test('ArrayBufferConverter test', () => {
+    const converter = new ArrayBufferConverter();
+    const buffer = new ArrayBuffer(16);
+    converter.load(buffer);
+    expect(converter.toString()).toEqual('');
 
-    test('should calculate attack without stoned', () => {
-        const character = new Character();
-        character.distance = 2;
-        expect(character.attack).toBe(90);
-    });
-
-    test('should calculate attack with stoned', () => {
-        const character = new Character();
-        character.distance = 2;
-        character.stoned = true;
-        expect(character.attack).toBe(85);
-    });
-
-    test('should throw error when setting attack directly', () => {
-        const character = new Character();
-        expect(() => {
-            character.attack = 100;
-        }).toThrow('Cannot set attack value directly.');
-    });
-
-    test('should set stoned value', () => {
-        const character = new Character();
-        character.stoned = true;
-        expect(character.stoned).toBe(true);
-    });
-
-    test('should throw error when setting stoned value to non-boolean', () => {
-        const character = new Character();
-        expect(() => {
-            character.stoned = 'true';
-        }).toThrow('Stoned value must be a boolean.');
-    });
+    const data = '{"data":{"user":{"id":1,"name":"Hitman","level":10}}}';
+    const dataBuffer = new TextEncoder().encode(data).buffer;
+    converter.load(dataBuffer);
+    expect(converter.toString()).toEqual(data);
 });
 
-describe('Magician class', () => {
-    test('should create a magician with default values', () => {
-        const magician = new Magician();
-        expect(magician.distance).toBe(0);
-        expect(magician.stoned).toBe(false);
-    });
-});
-
-describe('Daemon class', () => {
-    test('should create a daemon with default values', () => {
-        const daemon = new Daemon();
-        expect(daemon.distance).toBe(0);
-        expect(daemon.stoned).toBe(false);
-    });
+test('ArrayBufferConverter test without loading', () => {
+    const converter = new ArrayBufferConverter();
+    expect(() => converter.toString()).toThrow('ArrayBuffer is not loaded');
 });

@@ -1,46 +1,20 @@
-export class Character {
+export default class ArrayBufferConverter {
     constructor() {
-        this.distance = 0;
-        this.stoned = false;
+        this.buffer = null;
     }
 
-    get attack() {
-        const baseAttack = 100;
-        const distanceModifier = 1 - 0.1 * (this.distance - 1);
-        const attackWithDistance = baseAttack * distanceModifier;
+    load(buffer) {
+        this.buffer = buffer;
+    }
 
-        if (this.stoned) {
-            const stonedAttack = attackWithDistance - Math.log2(this.distance) * 5;
-            return Math.round(stonedAttack);
+    toString() {
+        if (!this.buffer) {
+            throw new Error('ArrayBuffer is not loaded');
         }
-
-        return Math.round(attackWithDistance);
+    
+        const bufferView = new Uint8Array(this.buffer);
+        const decoder = new TextDecoder('utf-8');
+        return decoder.decode(bufferView).replace(/\0/g, '');
     }
-
-    set attack(value) {
-        throw new Error('Cannot set attack value directly.');
-    }
-
-    get stoned() {
-        return this._stoned;
-    }
-
-    set stoned(value) {
-        if (typeof value !== 'boolean') {
-            throw new Error('Stoned value must be a boolean.');
-        }
-        this._stoned = value;
-    }
-}
-
-export class Magician extends Character {
-    constructor() {
-        super();
-    }
-}
-
-export class Daemon extends Character {
-    constructor() {
-        super();
-    }
+    
 }
