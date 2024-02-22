@@ -1,22 +1,46 @@
-export default class ErrorRepository {
-  constructor() {
-      this.errors = new Map();
-  }
+export class Character {
+    constructor() {
+        this.distance = 0;
+        this.stoned = false;
+    }
 
-  translate(code) {
-      const errorDescription = this.errors.get(code);
-      return errorDescription ? errorDescription : 'Unknown error';
-  }
+    get attack() {
+        const baseAttack = 100;
+        const distanceModifier = 1 - 0.1 * (this.distance - 1);
+        const attackWithDistance = baseAttack * distanceModifier;
 
-  addError(code, description) {
-      this.errors.set(code, description);
-  }
+        if (this.stoned) {
+            const stonedAttack = attackWithDistance - Math.log2(this.distance) * 5;
+            return Math.round(stonedAttack);
+        }
 
-  deleteError(code) {
-      this.errors.delete(code);
-  }
+        return Math.round(attackWithDistance);
+    }
 
-  clearErrors() {
-      this.errors.clear();
-  }
+    set attack(value) {
+        throw new Error('Cannot set attack value directly.');
+    }
+
+    get stoned() {
+        return this._stoned;
+    }
+
+    set stoned(value) {
+        if (typeof value !== 'boolean') {
+            throw new Error('Stoned value must be a boolean.');
+        }
+        this._stoned = value;
+    }
+}
+
+export class Magician extends Character {
+    constructor() {
+        super();
+    }
+}
+
+export class Daemon extends Character {
+    constructor() {
+        super();
+    }
 }
