@@ -1,18 +1,7 @@
-import ArrayBufferConverter from '../basic';
+import GameSavingLoader from '../basic';
 
-test('ArrayBufferConverter test', () => {
-    const converter = new ArrayBufferConverter();
-    const buffer = new ArrayBuffer(16);
-    converter.load(buffer);
-    expect(converter.toString()).toEqual('');
-
-    const data = '{"data":{"user":{"id":1,"name":"Hitman","level":10}}}';
-    const dataBuffer = new TextEncoder().encode(data).buffer;
-    converter.load(dataBuffer);
-    expect(converter.toString()).toEqual(data);
-});
-
-test('ArrayBufferConverter test without loading', () => {
-    const converter = new ArrayBufferConverter();
-    expect(() => converter.toString()).toThrow('ArrayBuffer is not loaded');
+test('should load game saving', async () => {
+  const expected = '{"id":9,"created":1546300800,"userInfo":{"id":1,"name":"Hitman","level":10,"points":2000}}';
+  const received = await GameSavingLoader.load();
+  expect(received).toBe(expected);
 });
